@@ -1,139 +1,163 @@
 <!DOCTYPE html>
-<html lang="ro">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>UNIVhub | Premium Scripts</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepHub | Premium Scripts</title>
     <style>
-        /* Setări de bază pentru mobil */
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background-color: #050505; color: #fff; min-height: 100vh; overflow-x: hidden; display: flex; flex-direction: column; }
-        
-        /* Efect de fundal (Glow) */
-        .glow-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 50% 0%, rgba(0, 200, 255, 0.15) 0%, transparent 60%); z-index: -1; pointer-events: none; }
+        /* Culori: Negru și Mov */
+        :root {
+            --bg-main: #0a0a0c;
+            --bg-card: #121216;
+            --bg-hover: #1a1a22;
+            --accent: #8b5cf6; /* Movul principal */
+            --accent-glow: rgba(139, 92, 246, 0.4);
+            --text-main: #ffffff;
+            --text-muted: #9ca3af;
+            --border: #2a2a35;
+        }
 
-        /* Header */
-        header { text-align: center; padding: 40px 20px 20px 20px; }
-        h1 { font-size: 2.8rem; font-weight: 800; letter-spacing: 1px; margin-bottom: 5px; }
-        h1 span { color: #00c8ff; text-shadow: 0 0 15px rgba(0, 200, 255, 0.6); }
-        p.subtitle { color: #888; font-size: 1rem; margin-bottom: 20px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg-main); color: var(--text-main); min-height: 100vh; overflow-x: hidden; }
+
+        /* Header & Search */
+        header { padding: 20px; display: flex; flex-direction: column; gap: 15px; position: sticky; top: 0; background: var(--bg-main); z-index: 100; border-bottom: 1px solid var(--border); }
         
-        /* Banner Discord */
-        .discord-btn { display: inline-flex; align-items: center; justify-content: center; background-color: #5865F2; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 1rem; transition: 0.3s; box-shadow: 0 4px 15px rgba(88, 101, 242, 0.4); border: 1px solid #4752C4; }
+        .logo-area { display: flex; align-items: center; justify-content: space-between; }
+        .logo { font-size: 24px; font-weight: 800; letter-spacing: 1px; }
+        .logo span { color: var(--accent); text-shadow: 0 0 10px var(--accent-glow); }
+        
+        .discord-btn { background: var(--accent); color: white; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; box-shadow: 0 0 15px var(--accent-glow); transition: 0.2s; }
         .discord-btn:active { transform: scale(0.95); }
-        .discord-btn img { width: 20px; margin-right: 10px; }
 
-        /* Containerul pentru Scripturi */
-        .container { padding: 20px; display: flex; flex-direction: column; gap: 15px; max-width: 600px; margin: 0 auto; width: 100%; }
+        .search-bar { display: flex; align-items: center; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 10px 15px; }
+        .search-bar input { background: transparent; border: none; color: white; width: 100%; outline: none; font-size: 15px; }
+        .search-bar input::placeholder { color: var(--text-muted); }
 
-        /* Cardul de Script (Design Premium) */
-        .card { background: linear-gradient(145deg, #101010, #181818); border: 1px solid #2a2a2a; border-radius: 16px; padding: 20px; position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: #00c8ff; border-radius: 4px 0 0 4px; }
+        /* Layout Secțiuni */
+        .section-title { padding: 20px 20px 10px 20px; font-size: 18px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+        .section-title span { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+
+        /* Grid-ul de Carduri (ca pe rblxscripts) */
+        .container { padding: 0 20px 20px 20px; display: grid; grid-template-columns: 1fr; gap: 15px; max-width: 800px; margin: 0 auto; }
+
+        /* Cardul de Script */
+        .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 15px; display: flex; flex-direction: column; gap: 12px; transition: 0.2s; position: relative; overflow: hidden; }
+        .card:active { background: var(--bg-hover); border-color: var(--accent); }
         
-        /* Tag-uri */
-        .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
-        .tag { background-color: #222; color: #aaa; font-size: 0.75rem; padding: 4px 10px; border-radius: 20px; border: 1px solid #333; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-        .tag.premium { background: linear-gradient(45deg, #ff00cc, #3333ff); color: #fff; border: none; box-shadow: 0 0 10px rgba(255, 0, 204, 0.4); }
-        
-        /* Titlu Script */
-        h2 { font-size: 1.4rem; margin-bottom: 5px; color: #fff; }
-        .game { color: #888; font-size: 0.9rem; margin-bottom: 20px; display: flex; align-items: center; }
-        .game::before { content: '🎮'; margin-right: 5px; }
+        /* Linia mov de sus */
+        .card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: var(--accent); opacity: 0.8; }
 
-        /* Butonul de Copy (Mare pentru mobil) */
-        .copy-btn { display: flex; align-items: center; justify-content: center; width: 100%; padding: 15px; background-color: #1a1a1a; color: #fff; border: 2px solid #333; border-radius: 12px; font-size: 1rem; font-weight: 700; transition: 0.2s; cursor: pointer; }
-        .copy-btn:active { background-color: #00c8ff; color: #000; border-color: #00c8ff; transform: scale(0.98); }
-        
-        /* Starea de succes */
-        .copy-btn.success { background-color: #00ff88; color: #000; border-color: #00ff88; }
+        /* Header-ul Cardului (Tag-uri) */
+        .card-header { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 5px; }
+        .tag { font-size: 10px; font-weight: 700; padding: 4px 8px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .tag.key { background: rgba(139, 92, 246, 0.2); color: #a78bfa; border: 1px solid rgba(139, 92, 246, 0.3); }
+        .tag.mobile { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .tag.premium { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
 
-        /* Footer */
-        footer { text-align: center; padding: 30px; color: #555; font-size: 0.8rem; margin-top: auto; }
+        /* Titlu Card */
+        .card h3 { font-size: 16px; font-weight: 600; line-height: 1.3; color: white; }
+        .card h3 span { color: var(--text-muted); font-weight: 400; font-size: 14px; display: block; margin-bottom: 2px;}
+
+        /* Footer-ul Cardului (Buton + Views) */
+        .card-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 5px; }
+        .views { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 5px; }
+        
+        .copy-btn { background: #1f1f27; color: white; border: 1px solid var(--border); padding: 10px 15px; border-radius: 8px; font-size: 13px; font-weight: 600; transition: 0.2s; cursor: pointer; display: flex; align-items: center; gap: 5px;}
+        .copy-btn:active { background: var(--accent); border-color: var(--accent); transform: scale(0.95); }
+        .copy-btn.success { background: #10b981; border-color: #10b981; }
+
+        /* Ascunde scrollbar-ul orizontal pe mobil */
+        ::-webkit-scrollbar { width: 0; height: 0; }
     </style>
 </head>
 <body>
 
-    <div class="glow-bg"></div>
-
     <header>
-        <h1>UNIV<span>hub</span></h1>
-        <p class="subtitle">The Ultimate Roblox Script Hub</p>
-        <a href="https://discord.gg/QN9yTgzJNQ" class="discord-btn" target="_blank">
-            Join Discord
-        </a>
+        <div class="logo-area">
+            <div class="logo">Deep<span>Hub</span></div>
+            <a href="https://discord.gg/QN9yTgzJNQ" class="discord-btn">Discord</a>
+        </div>
+        <div class="search-bar">
+            <span style="margin-right: 10px; color: var(--text-muted);">🔍</span>
+            <input type="text" placeholder="Search scripts or games...">
+        </div>
     </header>
 
-    <div class="container" id="scripts-container">
-        <!-- Scripturile vor fi injectate aici de JavaScript -->
+    <div class="section-title">
+        Newest <span>Updated Daily</span>
     </div>
 
-    <footer>
-        <p>© 2026 UNIVhub | Made by @avongg6 & @Og.gg</p>
-    </footer>
+    <div class="container" id="scripts-container">
+        <!-- Scripturile vor fi injectate aici -->
+    </div>
 
     <script>
         // AICI PUI SCRIPTURILE TALE
         const scripts = [
             {
                 name: "UNIVhub",
-                game: "Universal (All Games)",
-                tags: ["Aimbot", "ESP", "Fly", "Premium"],
-                isPremium: true,
-                // AICI PUI LINK-UL DE LA GITHUB CAND E GATA SCRIPTUL
+                game: "Universal",
+                tags: ["Premium", "Mobile Friendly", "Aimbot", "ESP"],
+                views: "1.2K",
                 code: 'loadstring(game:HttpGet("https://raw.githubusercontent.com/filip-prog/HussHubV2/main/UNIVhub.lua"))()'
             },
             {
                 name: "PrimeHUB",
                 game: "Prison Life",
-                tags: ["Silent Aim", "ESP", "Gun Mod"],
-                isPremium: false,
+                tags: ["Key System", "Mobile Friendly", "Silent Aim"],
+                views: "3.4K",
                 code: 'loadstring(game:HttpGet("https://raw.githubusercontent.com/filip-prog/fuzzy-octo-train/main/main.lua"))()'
             },
             {
                 name: "MoneyHUB",
                 game: "Steal An Egg",
-                tags: ["Pet Spawner", "Auto Money"],
-                isPremium: false,
+                tags: ["Mobile Friendly", "Pet Spawner"],
+                views: "5.1K",
                 code: 'loadstring(game:HttpGet("https://raw.githubusercontent.com/filip-prog/Steal-a-egg/main/main.lua"))()'
             }
         ];
 
         const container = document.getElementById('scripts-container');
 
-        // Generăm cardurile
         scripts.forEach((script, index) => {
             const card = document.createElement('div');
             card.className = 'card';
             
-            // Generăm tag-urile
             let tagsHTML = '';
             script.tags.forEach(tag => {
-                tagsHTML += `<span class="tag ${script.isPremium ? 'premium' : ''}">${tag}</span>`;
+                let tagClass = 'tag';
+                if (tag === 'Key System') tagClass += ' key';
+                if (tag === 'Mobile Friendly') tagClass += ' mobile';
+                if (tag === 'Premium') tagClass += ' premium';
+                tagsHTML += `<span class="${tagClass}">${tag}</span>`;
             });
 
-            // Construim HTML-ul
             card.innerHTML = `
-                <div class="tags">${tagsHTML}</div>
-                <h2>${script.name}</h2>
-                <div class="game">${script.game}</div>
-                <button class="copy-btn" id="btn-${index}">📋 Copy Script</button>
+                <div class="card-header">
+                    ${tagsHTML}
+                </div>
+                <h3>
+                    <span>${script.game}</span>
+                    ${script.name}
+                </h3>
+                <div class="card-footer">
+                    <div class="views">👁️ ${script.views} views</div>
+                    <button class="copy-btn" id="btn-${index}">📋 Copy Script</button>
+                </div>
             `;
 
             container.appendChild(card);
 
-            // Adăugăm acțiunea pentru buton
             const btn = document.getElementById(`btn-${index}`);
             btn.addEventListener('click', () => {
                 navigator.clipboard.writeText(script.code).then(() => {
                     btn.textContent = "✅ Copied!";
                     btn.classList.add('success');
-                    
                     setTimeout(() => {
                         btn.textContent = "📋 Copy Script";
                         btn.classList.remove('success');
                     }, 2000);
-                }).catch(err => {
-                    alert("Eroare la copiere. Incearca din nou.");
                 });
             });
         });
